@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Table } from 'primeng/table';
 import { Customer, Representative } from '../../domain/customer';
 import { CustomerService } from '../../service/customerservice';
+import { Transaction } from 'src/domain/transaction';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'table-filter-menu-demo',
@@ -9,7 +11,7 @@ import { CustomerService } from '../../service/customerservice';
     styleUrls: ['table-filter-menu-demo.scss']
 })
 export class TableFilterMenuDemo implements OnInit {
-    customers: Customer[];
+    customers: Transaction[];
 
     representatives: Representative[];
 
@@ -22,11 +24,11 @@ export class TableFilterMenuDemo implements OnInit {
     constructor(private customerService: CustomerService) {}
 
     ngOnInit() {
-        this.customerService.getCustomersLarge().then((customers) => {
-            this.customers = customers;
+        this.customerService.getCustomersLarge().pipe(take(1)).subscribe((customers: Transaction[]) => {
+            this.customers = customers
             this.loading = false;
 
-            this.customers.forEach((customer) => (customer.date = new Date(customer.date)));
+            //this.customers.forEach((customer) => (customer.date = new Date(customer.date)));
         });
 
         this.representatives = [
